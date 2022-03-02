@@ -1,7 +1,7 @@
 import smtplib
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
-from email.MIMEImage import MIMEImage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
 
 # Conta de e-mail que enviará a mensagem (apenas g-mail)
 fromEmail = 'email@gmail.com'
