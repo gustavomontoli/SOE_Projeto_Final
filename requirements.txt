@@ -1,4 +1,5 @@
 imutils
-flask
+flask~=2.0.2
 picamera[array]
 Flask-BasicAuth==0.2.0
+numpy~=1.21.5
