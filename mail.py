@@ -4,11 +4,11 @@ from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 
 # Conta de e-mail que enviará a mensagem (apenas g-mail)
-fromEmail = 'gustavomont97@gmail.com'
-fromEmailPassword = 'isagus10'
+fromEmail = 'fromEmail@gmail.com'
+fromEmailPassword = 'fromPassword'
 
 # Conta de e-mail que receberá a mensagem
-toEmail = 'anamatos67@gmail.com'
+toEmail = 'toEmail@gmail.com'
 
 
 # Cria função sendEmail que passa o argumento image

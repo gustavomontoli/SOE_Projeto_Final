@@ -9,7 +9,7 @@ app = Flask(__name__)
 # Definir a saída como a imagem captada pela webcam.
 video_camera = cv2.VideoCapture(0)
 # Este objeto irá inicializar um modelo de detecção corporal.
-object_classifier = cv2.CascadeClassifier("models/fullbody_recognition_model.xml")
+object_classifier = cv2.CascadeClassifier("models/facial_recognition_model.xml")
 
 
 # Template do aplicativo
