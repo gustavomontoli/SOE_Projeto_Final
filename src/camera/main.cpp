@@ -4,12 +4,14 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/objdetect.hpp>
+#include <opencv2/videoio/videoio_c.h>
 #include <iostream>
+#include <unistd.h>
 
 using namespace cv;
 using namespace std;
 
-void main()
+int main()
 {
     // A imagem captada pela webcam -> adaptar para receber a imagem da câmera rpi.
     VideoCapture cap(0);
@@ -18,16 +20,16 @@ void main()
 
     // Carregando modelo de detecção corporal/rosto.
     CascadeClassifier detectorCascade;
-    detectorCascade.load("models/facial_recognition_model.xml");
+    detectorCascade.load("../models/facial_recognition_model.xml");
 
     // Mensagem de erro caso haja erro na abertura do modelo de detecção.
     if (detectorCascade.empty())
     {
         cout << "Arquivo XML não carregado" << endl;
+        return -1;
     }
 
-    while (true)
-    {
+    while(1){
         // Capturar imagem da webcam -> adaptar para receber a imagem da câmera rpi.
         cap.read(img);
         // Convertendo a escala de cor.
@@ -43,8 +45,9 @@ void main()
             rectangle(img, pessoa[i].tl(), pessoa[i].br(), Scalar(255, 0, 255), 2);
         }
 
-        // Mostrando o resultado.
-        imshow("Image", img);
-        waitKey(1);
+        imwrite("../image.jpeg", img);
+        usleep(40e3);
     }
+
+    return 0;
 }
