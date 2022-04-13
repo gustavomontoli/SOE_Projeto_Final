@@ -1,1 +1,0 @@
-Assignments from the Embedded Systems class at UNB, at the 2021.2 semester. The languages used are C and Shell Script from UNIX.
