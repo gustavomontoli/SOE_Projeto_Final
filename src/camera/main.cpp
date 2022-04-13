@@ -20,7 +20,7 @@ int main()
 
     // Carregando modelo de detecção corporal/rosto.
     CascadeClassifier detectorCascade;
-    detectorCascade.load("../models/facial_recognition_model.xml");
+    detectorCascade.load("../models/haarcascade_fullbody.xml");
 
     // Mensagem de erro caso haja erro na abertura do modelo de detecção.
     if (detectorCascade.empty())
@@ -29,7 +29,8 @@ int main()
         return -1;
     }
 
-    while(1){
+    while (1)
+    {
         // Capturar imagem da webcam -> adaptar para receber a imagem da câmera rpi.
         cap.read(img);
         // Convertendo a escala de cor.
