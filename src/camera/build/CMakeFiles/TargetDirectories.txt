@@ -1,9 +1,0 @@
-C:/Users/gusta/opencvtest/build/CMakeFiles/Experimental.dir
-C:/Users/gusta/opencvtest/build/CMakeFiles/Nightly.dir
-C:/Users/gusta/opencvtest/build/CMakeFiles/Continuous.dir
-C:/Users/gusta/opencvtest/build/CMakeFiles/NightlyMemoryCheck.dir
-C:/Users/gusta/opencvtest/build/CMakeFiles/opencvtest.dir
-C:/Users/gusta/opencvtest/build/CMakeFiles/PACKAGE.dir
-C:/Users/gusta/opencvtest/build/CMakeFiles/RUN_TESTS.dir
-C:/Users/gusta/opencvtest/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/gusta/opencvtest/build/CMakeFiles/ZERO_CHECK.dir
