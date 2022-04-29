@@ -17,6 +17,8 @@
 #include <opencv2/objdetect.hpp>
 #include <opencv2/videoio/videoio_c.h>
 
+#define SOCKETNAME "/tmp/video"
+
 using namespace cv;
 using namespace std;
 
@@ -27,8 +29,6 @@ typedef struct
 } tparams;
 
 bool capture = false;
-char socket_name[100];
-int socket_id;
 
 void timer(int signum)
 {
@@ -38,8 +38,6 @@ void timer(int signum)
 void end(int signum)
 {
     printf("\nFechando o programa.\n");
-    unlink(socket_name);
-    close(socket_id);
     exit(signum);
 }
 
@@ -104,39 +102,27 @@ void *send_thread(void *pparams)
     tparams *params;
     params = (tparams *)pparams;
 
-    struct sockaddr socket_struct;
-    strcpy(socket_name, "/tmp/video");
-    socket_id = socket(PF_LOCAL, SOCK_STREAM, 0);
-    socket_struct.sa_family = AF_LOCAL;
-    strcpy(socket_struct.sa_data, socket_name);
-    bind(socket_id, &socket_struct, sizeof(socket_struct));
+	struct sockaddr name;
+	int socket_id = socket(PF_LOCAL, SOCK_STREAM, 0);
+	name.sa_family = AF_LOCAL;
+	strcpy(name.sa_data, SOCKETNAME);
 
-    listen(socket_id, 10);
+    connect(socket_id, &name, sizeof(name));
     while (1)
     {
-        int socket_id_cliente, end_server_ok;
-        struct sockaddr clienteAddr;
-        socklen_t clienteLength = sizeof((struct sockaddr *)&clienteAddr);
-        socket_id_cliente = accept(socket_id, &clienteAddr, &clienteLength);
+        while (!params->ready);
+        params->ready = false;
 
-        while (1)
-        {
-            while (!params->ready)
-                ;
-            params->ready = false;
+        // int size = params->data.total() * params->data.channels();
+        // vector<unsigned char> buffer;
+        // imencode(".jpg", params->data, buffer);
+        // char *data = base64_encode(buffer.data(), buffer.size());
+        // write(socket_id_cliente, data.c_str(), data.length());
 
-            // int size = params->data.total() * params->data.channels();
-            // vector<unsigned char> buffer;
-            // imencode(".jpeg", params->data, buffer);
-            // string data = base64_encode(buffer.data(), buffer.size());
-            // write(socket_id_cliente, data.c_str(), data.length());
-
-            imwrite("../image.jpeg", params->data);
-            write(socket_id_cliente, ".", 2);
-        }
-
-        close(socket_id_cliente);
+        imwrite("../image.jpeg", params->data);
+        write(socket_id, ".", 2);
     }
+    close(socket_id);
     end(0);
 }
 

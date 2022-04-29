@@ -3,11 +3,11 @@ const http = require('http');
 const { Server } = require("socket.io");
 const fs = require('fs');
 const net = require('net');
+const ip = require('ip');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-const local = net.connect('/tmp/video');
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
@@ -25,12 +25,26 @@ io.on('connection', (socket) => {
   });
 });
 
-local.on('data', _ => {
-  const data = fs.readFileSync('../camera/image.jpeg');
-  const buffer = Buffer.from(data).toString('base64');
-  io.emit('image', buffer);
+const local = net.createServer((socket) => {
+  socket.on('data', _ => {
+    const data = fs.readFileSync('../camera/image.jpeg');
+    const buffer = Buffer.from(data).toString('base64');
+    io.emit('image', buffer);
+  });
 });
 
+local.listen('/tmp/video');
+
 server.listen(3000, () => {
-  console.log('>>> http://localhost:3000');
+  console.log(`Acesse em http://${ip.address()}:3000`);
+});
+
+process.on('SIGINT', () => {
+  console.log('Encerrando o servidor...');
+
+  local.close();
+  io.close();
+  server.close();
+
+  process.exit(0);
 });
