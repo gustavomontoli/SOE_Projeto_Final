@@ -26,13 +26,24 @@ typedef struct
 {
     Mat data;
     bool ready;
+    bool send_mail;
 } tparams;
 
 bool capture = false;
+int frames_detected = 0;
+int mail_timer = 0;
 
 void timer(int signum)
 {
     capture = true;
+    if (0 < mail_timer)
+    {
+        mail_timer++;
+        if (mail_timer > 6000)
+        {
+            mail_timer = 0;
+        }
+    }
 }
 
 void end(int signum)
@@ -92,6 +103,24 @@ void *capture_thread(void *pparams)
             rectangle(img, pessoa[i].tl(), pessoa[i].br(), Scalar(255, 0, 255), 2);
         }
 
+        if (mail_timer == 0)
+        {
+            if (pessoa.size() > 0)
+            {
+                frames_detected++;
+                if (frames_detected > 10)
+                {
+                    params->send_mail = true;
+                }
+            }
+            else
+            {
+                frames_detected = 0;
+            }
+        } else {
+            frames_detected = 0;
+        }
+
         params->data = img.clone();
         params->ready = true;
     }
@@ -102,10 +131,10 @@ void *send_thread(void *pparams)
     tparams *params;
     params = (tparams *)pparams;
 
-	struct sockaddr name;
-	int socket_id = socket(PF_LOCAL, SOCK_STREAM, 0);
-	name.sa_family = AF_LOCAL;
-	strcpy(name.sa_data, SOCKETNAME);
+    struct sockaddr name;
+    int socket_id = socket(PF_LOCAL, SOCK_STREAM, 0);
+    name.sa_family = AF_LOCAL;
+    strcpy(name.sa_data, SOCKETNAME);
 
     connect(socket_id, &name, sizeof(name));
     while (1)
@@ -113,14 +142,14 @@ void *send_thread(void *pparams)
         while (!params->ready);
         params->ready = false;
 
-        // int size = params->data.total() * params->data.channels();
-        // vector<unsigned char> buffer;
-        // imencode(".jpg", params->data, buffer);
-        // char *data = base64_encode(buffer.data(), buffer.size());
-        // write(socket_id_cliente, data.c_str(), data.length());
-
-        imwrite("../image.jpeg", params->data);
-        write(socket_id, ".", 2);
+        imwrite("./image.jpeg", params->data);
+        if(params->send_mail) {
+            params->send_mail = false;
+            write(socket_id, "mail", 4);
+            mail_timer++;
+        } else {
+            write(socket_id, "pic", 3);
+        }
     }
     close(socket_id);
     end(0);
@@ -134,6 +163,7 @@ int main()
 
     tparams params;
     params.ready = false;
+    params.send_mail = false;
 
     pthread_t camera;
     pthread_create(&camera, NULL, &capture_thread, &params);
