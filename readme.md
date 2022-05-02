@@ -7,6 +7,6 @@
 <p align="center">
     <img src="documentação/images/teste1_trim.gif" width="480">
     <br>
-    <sup>Authors <a href="https://github.com/gustavomontoli" target="_blank">Gustavo Monteiro</a> (left) and <a href="https://github.com/l-pires" target="_blank">Lucas Pires</a> (right) </sup>
+    <sup>Authors: <a href="https://github.com/gustavomontoli" target="_blank">Gustavo Monteiro</a> and <a href="https://github.com/l-pires" target="_blank">Lucas Pires</a> </sup>
 </p>
 
